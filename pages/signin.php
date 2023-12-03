@@ -23,7 +23,7 @@
             }
         }
 
-        $is_authenticated = null;
+        $auth_error_message = "";
 
         $has_errors = count($error_message) > 0;
         if (!$has_errors) {
@@ -41,14 +41,13 @@
                         $hashed_password = $queried_user['password'];
 
                         if (password_verify($password, $hashed_password)) {
-                            $is_authenticated = true;
                             header('Location: home.php');
                             $_SESSION['username'] = $queried_user['username'];
                         } else {
-                            $is_authenticated = false;
+                            $auth_error_message = "Invalid username or password";
                         }
                     } else {
-                        $is_authenticated = false;
+                        $auth_error_message = "Invalid username or password";
                     }
                 } catch(Exception $error) {
                     mysqli_error($connection);
@@ -62,7 +61,7 @@
         method="post"
         class="p-[25px] rounded-[10px] border-[1px] border-[#EAEAEA] min-w-[359px]"
     >
-        <?php if (!$is_authenticated) { ?>
+        <?php if (!empty($auth_error_message)) { ?>
             <div class="rounded-[10px] bg-red-100 min-h-[60px] px-[10px] flex justify-center items-center mb-[20px]">
                 <p class="text-red-500">Invalid username or password</p>
             </div>
