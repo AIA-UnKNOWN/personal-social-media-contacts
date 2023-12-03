@@ -10,6 +10,9 @@
 <body class="min-h-screen flex justify-center items-center">
 
     <?php
+        include('../database.php');
+
+        // Validate fields
         $error_message = [];
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (empty($_POST['username'])) {
@@ -27,6 +30,29 @@
                 $_POST['password'] != $_POST['confirm_password']
             ) {
                 $error_message['confirm_password'] = 'Password does not match';
+            }
+        }
+
+        // If every field is satisfied, store the username and password to the 'users' table
+        $has_errors = count($error_message) > 0;
+        if (!$has_errors) {
+            $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
+            $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
+
+            if (!empty($username) && !empty($password)) {
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+                try {
+                    $result = mysqli_query(
+                        $connection,
+                        "INSERT INTO users (username, password) VALUES ('$username', '$hashed_password')"
+                    );
+                    
+                    // redirect the to the signin page
+                    header('Location: signin.php');
+                } catch(Exception $error) {
+                    mysqli_error($connection);
+                }
             }
         }
     ?>
