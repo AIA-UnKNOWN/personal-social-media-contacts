@@ -10,6 +10,9 @@
 <body class="min-h-screen flex justify-center items-center">
 
     <?php
+        session_start();
+        include('../database.php');
+
         $error_message = [];
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (empty($_POST['username'])) {
@@ -19,6 +22,39 @@
                 $error_message['password'] = 'Password is required';
             }
         }
+
+        $is_authenticated = null;
+
+        $has_errors = count($error_message) > 0;
+        if (!$has_errors) {
+            $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
+            $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
+            
+            if (!empty($username) && !empty($password)) {
+                try {
+                    $result = mysqli_query(
+                        $connection,
+                        "SELECT * FROM users WHERE username = '$username'"
+                    );
+                    if (mysqli_num_rows($result) > 0) {
+                        $queried_user = mysqli_fetch_assoc($result);
+                        $hashed_password = $queried_user['password'];
+
+                        if (password_verify($password, $hashed_password)) {
+                            $is_authenticated = true;
+                            header('Location: home.php');
+                            $_SESSION['username'] = $queried_user['username'];
+                        } else {
+                            $is_authenticated = false;
+                        }
+                    } else {
+                        $is_authenticated = false;
+                    }
+                } catch(Exception $error) {
+                    mysqli_error($connection);
+                }
+            }
+        }
     ?>
     
     <form
@@ -26,6 +62,11 @@
         method="post"
         class="p-[25px] rounded-[10px] border-[1px] border-[#EAEAEA] min-w-[359px]"
     >
+        <?php if (!$is_authenticated) { ?>
+            <div class="rounded-[10px] bg-red-100 min-h-[60px] px-[10px] flex justify-center items-center mb-[20px]">
+                <p class="text-red-500">Invalid username or password</p>
+            </div>
+        <?php } ?>
         <div class="flex flex-col gap-[10px]">
             <div>
                 <label
