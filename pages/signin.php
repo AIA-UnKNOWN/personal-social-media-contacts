@@ -8,6 +8,18 @@
     <link rel="stylesheet" href="../assets/main.css">
 </head>
 <body class="min-h-screen flex justify-center items-center">
+
+    <?php
+        $error_message = [];
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (empty($_POST['username'])) {
+                $error_message['username'] = 'Username is required';
+            }
+            if (empty($_POST['password'])) {
+                $error_message['password'] = 'Password is required';
+            }
+        }
+    ?>
     
     <form
         action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>"
@@ -26,7 +38,9 @@
                     id="username"
                     class="block w-full bg-[#E9E9E9] h-[40px] rounded-[10px] px-[10px] outline-none"
                 >
-                <!-- <span>Username error</span> -->
+                <?php if (isset($error_message['username'])) { ?>
+                    <span class="text-red-500 text-[14px]"><?= $error_message['username'] ?></span>
+                <?php } ?>
             </div>
             <div>
                 <label
@@ -39,7 +53,9 @@
                     id="password"
                     class="block w-full bg-[#E9E9E9] h-[40px] rounded-[10px] px-[10px] outline-none"
                 >
-                <!-- <span>Username error</span> -->
+                <?php if (isset($error_message['password'])) { ?>
+                    <span class="text-red-500 text-[14px]"><?= $error_message['password'] ?></span>
+                <?php } ?>
             </div>
         </div>
         <div class="mt-[40px]">
