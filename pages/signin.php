@@ -77,6 +77,7 @@
                     name="username"
                     id="username"
                     class="block w-full bg-[#E9E9E9] h-[40px] rounded-[10px] px-[10px] outline-none"
+                    autofocus
                 >
                 <?php if (isset($error_message['username'])) { ?>
                     <span class="text-red-500 text-[14px]"><?= $error_message['username'] ?></span>
