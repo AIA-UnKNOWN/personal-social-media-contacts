@@ -12,6 +12,10 @@
     <?php
         session_start();
         include('../database.php');
+        
+        if (isset($_SESSION['username'])) {
+            header('Location: home.php');
+        }
 
         $error_message = [];
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

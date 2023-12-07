@@ -10,7 +10,12 @@
 <body class="min-h-screen flex justify-center items-center">
 
     <?php
+        session_start();
         include('../database.php');
+
+        if (isset($_SESSION['username'])) {
+            header('Location: home.php');
+        }
 
         // Validate fields
         $error_message = [];
