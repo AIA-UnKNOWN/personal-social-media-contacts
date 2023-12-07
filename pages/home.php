@@ -10,15 +10,16 @@
 <body>
     <?php
     session_start();
+    include('../functions.php');
 
     if (empty($_SESSION['username'])) {
         header('Location: signin.php');
     }
 
-    // if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //     session_destroy();
-    //     header('Location: signin.php');
-    // }
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
+        session_destroy();
+        logout();
+    }
     ?>
 
     <div class="min-h-screen pb-[50px]">
@@ -28,6 +29,20 @@
                 src="https://avatars.githubusercontent.com/u/63773715?s=400&u=08ff2e23aff8f7d9d331732d3f393a4036a74cfd&v=4"
                 alt="Ajboy Ian Abordo picture"
             />
+        </div>
+        <div class="flex justify-center mt-[65px] mb-[53px]">
+            <form
+                action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>"
+                method="post"
+                class="w-[200px]"
+            >
+                <input
+                    type="submit"
+                    name="logout"
+                    value="Logout"
+                    class="block cursor-pointer w-full bg-[#6D96FF] text-white h-[40px] rounded-[10px] px-[10px] outline-none"
+                >
+            </form>
         </div>
         <div class="flex justify-center mt-[65px] mb-[53px]">
             <form
@@ -72,7 +87,7 @@
                 </div>
             </form>
         </div>
-        <p class="text-center text-[32px] font-[700] mb-[35px]">Social Media Links</p>
+        <p class="text-center text-[32px] font-[700] mb-[35px]">Ajboy Ian Abordo | Social Media Links</p>
         <ul class="flex justify-center items-center flex-wrap gap-[20px] max-w-[950px] mx-auto">
             <?php for ($i = 1; $i <= 14; $i++) { ?>
                 <li class="min-w-[230px] rounded-[10px] bg-[#E9E9E9]">

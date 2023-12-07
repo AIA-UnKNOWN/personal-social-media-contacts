@@ -11,3 +11,8 @@ function createTableIfNotExists($conn, $sqlQuery) {
         echo mysqli_error($conn);
     }
 }
+
+function logout() {
+    session_destroy();
+    header('Location: signin.php');
+}
