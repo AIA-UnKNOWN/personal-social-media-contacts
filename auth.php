@@ -2,11 +2,8 @@
 
 session_start();
 
-if (
-    isset($_SESSION['username']) &&
-    isset($_SESSION['password'])
-) {
-    header('Location: pages/signin.php');
+if (isset($_SESSION['username'])) {
+    header('Location: pages/home.php');
 } else {
-    header('Location: pages/signup.php');
+    header('Location: pages/signin.php');
 }
