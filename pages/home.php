@@ -11,6 +11,10 @@
     <?php
     session_start();
 
+    if (empty($_SESSION['username'])) {
+        header('Location: signin.php');
+    }
+
     // if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //     session_destroy();
     //     header('Location: signin.php');
