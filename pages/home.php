@@ -74,6 +74,8 @@
                 <li class="min-w-[230px] rounded-[10px] bg-[#E9E9E9]">
                     <a
                         href="platform/<?= $i ?>"
+                        target="_blank"
+                        rel="noopener"
                         class="flex justify-center items-center min-h-[40px] w-full"
                     >Platform <?= $i ?></a>
                 </li>
