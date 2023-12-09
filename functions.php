@@ -36,3 +36,18 @@ function insertSocialMedia($conn, $socialMediaData) {
 
     return $error_message;
 }
+
+function getSocialMedias($conn) {
+    $socialMedias = [];
+    try {
+        $sqlSelectQuery = "SELECT * FROM social_media_platforms";
+        $result = mysqli_query($conn, $sqlSelectQuery);
+        while ($row = mysqli_fetch_assoc($result)) {
+            array_push($socialMedias, $row);
+        }
+    } catch(Exception $error) {
+        echo $error;
+    }
+
+    return $socialMedias;
+}

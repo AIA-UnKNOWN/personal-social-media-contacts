@@ -30,6 +30,9 @@
             ];
             $error_message = insertSocialMedia($connection, $data);
         }
+
+        // Data for displaying social media contacts
+        $socialMedias = getSocialMedias($connection);
     ?>
 
     <div class="min-h-screen pb-[50px]">
@@ -123,14 +126,17 @@
         </div>
         <p class="text-center text-[32px] font-[700] mb-[35px]">Ajboy Ian Abordo | Social Media Links</p>
         <ul class="flex justify-center items-center flex-wrap gap-[20px] max-w-[950px] mx-auto">
-            <?php for ($i = 1; $i <= 14; $i++) { ?>
-                <li class="min-w-[230px] rounded-[10px] bg-[#E9E9E9]">
+            <?php foreach ($socialMedias as $socialMedia) { ?>
+                <li
+                    class="min-w-[230px] rounded-[10px] bg-[#E9E9E9] text-white"
+                    style="background-color: <?= $socialMedia['platform_color'] ?>;"
+                >
                     <a
-                        href="platform/<?= $i ?>"
+                        href="<?= $socialMedia['link'] ?>"
                         target="_blank"
                         rel="noopener"
                         class="flex justify-center items-center min-h-[40px] w-full"
-                    >Platform <?= $i ?></a>
+                    ><?= $socialMedia['name'] ?></a>
                 </li>
             <?php } ?>
         </ul>
