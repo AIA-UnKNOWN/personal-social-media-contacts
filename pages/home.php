@@ -12,12 +12,16 @@
         session_start();
         include('../database.php');
 
-        if (empty($_SESSION['username'])) {
-            header('Location: signin.php');
-        }
+        $is_authenticated = isset($_SESSION['username']);
 
+        // Form handler for logout
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
             logout();
+        }
+
+        // Form handler for signin
+        if (!$is_authenticated && $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
+            header('Location: signin.php');
         }
 
         // Form handler for adding social media link
@@ -49,81 +53,92 @@
                 method="post"
                 class="w-[200px]"
             >
-                <input
-                    type="submit"
-                    name="logout"
-                    value="Logout"
-                    class="block cursor-pointer w-full bg-[#6D96FF] text-white h-[40px] rounded-[10px] px-[10px] outline-none"
-                >
-            </form>
-        </div>
-        <div class="flex justify-center mt-[65px] mb-[53px]">
-            <form
-                action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>"
-                method="post"
-                class="p-[25px] rounded-[10px] border-[1px] border-[#EAEAEA] w-[500px]"
-            >
-                <div class="flex flex-col gap-[10px]">
-                    <div>
-                        <label
-                            for="platform-name"
-                            class="block mb-[10px]"
-                        >Platform Name</label>
-                        <input
-                            type="text"
-                            name="platform-name"
-                            id="platform-name"
-                            class="block w-full bg-[#E9E9E9] h-[40px] rounded-[10px] px-[10px] outline-none"
-                            autofocus
-                        >
-                        <?php if (isset($error_message['platform-name'])) { ?>
-                            <span class="text-red-500 text-[14px]"><?= $error_message['platform-name'] ?></span>
-                        <?php } ?>
-                    </div>
-                    <div>
-                        <label
-                            for="link"
-                            class="block mb-[10px]"
-                        >Link</label>
-                        <input
-                            type="text"
-                            name="link"
-                            id="link"
-                            class="block w-full bg-[#E9E9E9] h-[40px] rounded-[10px] px-[10px] outline-none"
-                        >
-                        <?php if (isset($error_message['link'])) { ?>
-                            <span class="text-red-500 text-[14px]"><?= $error_message['link'] ?></span>
-                        <?php } ?>
-                    </div>
-                    <div>
-                        <label
-                            for="color"
-                            class="block mb-[10px]"
-                        >Color</label>
-                        <div class="h-[40px] w-[40px]">
-                            <input
-                                type="color"
-                                name="color"
-                                value="#000"
-                                id="Color"
-                                class="block bg-[#E9E9E9] rounded-[10px] h-full w-full px-[2px] outline-none"
-                            >
-                            <?php if (isset($error_message['color'])) { ?>
-                                <span class="text-red-500 text-[14px]"><?= $error_message['color'] ?></span>
-                            <?php } ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-[40px]">
+                <?php if ($is_authenticated) { ?>
                     <input
                         type="submit"
-                        name="add"
-                        value="Add"
-                        class="block w-full bg-[#6D96FF] text-white h-[40px] rounded-[10px] px-[10px] outline-none"
+                        name="logout"
+                        value="Logout"
+                        class="block cursor-pointer w-full bg-[#6D96FF] text-white h-[40px] rounded-[10px] px-[10px] outline-none"
                     >
-                </div>
+                <?php } else { ?>
+                    <input
+                        type="submit"
+                        name="signin"
+                        value="Signin"
+                        class="block cursor-pointer w-full bg-[#6D96FF] text-white h-[40px] rounded-[10px] px-[10px] outline-none"
+                    >
+                <?php } ?>
             </form>
         </div>
+        <?php if ($is_authenticated) { ?>
+            <div class="flex justify-center mt-[65px] mb-[53px]">
+                <form
+                    action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>"
+                    method="post"
+                    class="p-[25px] rounded-[10px] border-[1px] border-[#EAEAEA] w-[500px]"
+                >
+                    <div class="flex flex-col gap-[10px]">
+                        <div>
+                            <label
+                                for="platform-name"
+                                class="block mb-[10px]"
+                            >Platform Name</label>
+                            <input
+                                type="text"
+                                name="platform-name"
+                                id="platform-name"
+                                class="block w-full bg-[#E9E9E9] h-[40px] rounded-[10px] px-[10px] outline-none"
+                                autofocus
+                            >
+                            <?php if (isset($error_message['platform-name'])) { ?>
+                                <span class="text-red-500 text-[14px]"><?= $error_message['platform-name'] ?></span>
+                            <?php } ?>
+                        </div>
+                        <div>
+                            <label
+                                for="link"
+                                class="block mb-[10px]"
+                            >Link</label>
+                            <input
+                                type="text"
+                                name="link"
+                                id="link"
+                                class="block w-full bg-[#E9E9E9] h-[40px] rounded-[10px] px-[10px] outline-none"
+                            >
+                            <?php if (isset($error_message['link'])) { ?>
+                                <span class="text-red-500 text-[14px]"><?= $error_message['link'] ?></span>
+                            <?php } ?>
+                        </div>
+                        <div>
+                            <label
+                                for="color"
+                                class="block mb-[10px]"
+                            >Color</label>
+                            <div class="h-[40px] w-[40px]">
+                                <input
+                                    type="color"
+                                    name="color"
+                                    value="#000"
+                                    id="Color"
+                                    class="block bg-[#E9E9E9] rounded-[10px] h-full w-full px-[2px] outline-none"
+                                >
+                                <?php if (isset($error_message['color'])) { ?>
+                                    <span class="text-red-500 text-[14px]"><?= $error_message['color'] ?></span>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-[40px]">
+                        <input
+                            type="submit"
+                            name="add"
+                            value="Add"
+                            class="block w-full bg-[#6D96FF] text-white h-[40px] rounded-[10px] px-[10px] outline-none"
+                        >
+                    </div>
+                </form>
+            </div>
+        <?php } ?>
         <p class="text-center text-[32px] font-[700] mb-[35px]">Ajboy Ian Abordo | Social Media Links</p>
         <ul class="flex justify-center items-center flex-wrap gap-[20px] max-w-[950px] mx-auto">
             <?php foreach ($socialMedias as $socialMedia) { ?>
