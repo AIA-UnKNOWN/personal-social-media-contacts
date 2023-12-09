@@ -9,16 +9,27 @@
 </head>
 <body>
     <?php
-    session_start();
-    include('../functions.php');
+        session_start();
+        include('../database.php');
 
-    if (empty($_SESSION['username'])) {
-        header('Location: signin.php');
-    }
+        if (empty($_SESSION['username'])) {
+            header('Location: signin.php');
+        }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
-        logout();
-    }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
+            logout();
+        }
+
+        // Form handler for adding social media link
+        $error_message = [];
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add'])) {
+            $data = [
+                'platform-name' => filter_input(INPUT_POST, 'platform-name', FILTER_SANITIZE_SPECIAL_CHARS),
+                'link' => filter_input(INPUT_POST, 'link', FILTER_SANITIZE_SPECIAL_CHARS),
+                'color' => filter_input(INPUT_POST, 'color', FILTER_SANITIZE_SPECIAL_CHARS)
+            ];
+            $error_message = insertSocialMedia($connection, $data);
+        }
     ?>
 
     <div class="min-h-screen pb-[50px]">
@@ -62,6 +73,9 @@
                             class="block w-full bg-[#E9E9E9] h-[40px] rounded-[10px] px-[10px] outline-none"
                             autofocus
                         >
+                        <?php if (isset($error_message['platform-name'])) { ?>
+                            <span class="text-red-500 text-[14px]"><?= $error_message['platform-name'] ?></span>
+                        <?php } ?>
                     </div>
                     <div>
                         <label
@@ -74,6 +88,27 @@
                             id="link"
                             class="block w-full bg-[#E9E9E9] h-[40px] rounded-[10px] px-[10px] outline-none"
                         >
+                        <?php if (isset($error_message['link'])) { ?>
+                            <span class="text-red-500 text-[14px]"><?= $error_message['link'] ?></span>
+                        <?php } ?>
+                    </div>
+                    <div>
+                        <label
+                            for="color"
+                            class="block mb-[10px]"
+                        >Color</label>
+                        <div class="h-[40px] w-[40px]">
+                            <input
+                                type="color"
+                                name="color"
+                                value="#000"
+                                id="Color"
+                                class="block bg-[#E9E9E9] rounded-[10px] h-full w-full px-[2px] outline-none"
+                            >
+                            <?php if (isset($error_message['color'])) { ?>
+                                <span class="text-red-500 text-[14px]"><?= $error_message['color'] ?></span>
+                            <?php } ?>
+                        </div>
                     </div>
                 </div>
                 <div class="mt-[40px]">
